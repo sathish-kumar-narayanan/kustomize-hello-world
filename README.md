@@ -1,0 +1,1 @@
+# kustomize-hello-world
