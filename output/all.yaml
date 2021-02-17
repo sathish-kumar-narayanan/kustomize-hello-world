@@ -1,27 +1,27 @@
 apiVersion: v1
 data:
-  altGreeting: Have a pineapple!
-  enableRisky: "true"
+  altGreeting: Good Morning!
+  enableRisky: "false"
 kind: ConfigMap
 metadata:
   annotations:
-    note: Hello, I am staging!
+    note: Hello, I am production!
   labels:
     app: hello
     org: acmeCorporation
-    variant: staging
-  name: staging-the-map
+    variant: production
+  name: production-the-map
 ---
 apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    note: Hello, I am staging!
+    note: Hello, I am production!
   labels:
     app: hello
     org: acmeCorporation
-    variant: staging
-  name: staging-the-service
+    variant: production
+  name: production-the-service
 spec:
   ports:
   - port: 8666
@@ -31,36 +31,36 @@ spec:
     app: hello
     deployment: hello
     org: acmeCorporation
-    variant: staging
+    variant: production
   type: clusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    note: Hello, I am staging!
+    note: Hello, I am production!
   labels:
     app: hello
     org: acmeCorporation
-    variant: staging
-  name: staging-the-deployment
+    variant: production
+  name: production-the-deployment
 spec:
-  replicas: 3
+  replicas: 10
   selector:
     matchLabels:
       app: hello
       deployment: hello
       org: acmeCorporation
-      variant: staging
+      variant: production
   template:
     metadata:
       annotations:
-        note: Hello, I am staging!
+        note: Hello, I am production!
       labels:
         app: hello
         deployment: hello
         org: acmeCorporation
-        variant: staging
+        variant: production
     spec:
       containers:
       - command:
@@ -72,12 +72,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: altGreeting
-              name: staging-the-map
+              name: production-the-map
         - name: ENABLE_RISKY
           valueFrom:
             configMapKeyRef:
               key: enableRisky
-              name: staging-the-map
+              name: production-the-map
         image: monopole/hello:1
         name: the-container
         ports:
