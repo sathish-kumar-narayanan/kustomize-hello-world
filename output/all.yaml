@@ -4,16 +4,24 @@ data:
   enableRisky: "false"
 kind: ConfigMap
 metadata:
+  annotations:
+    note: Hello, I am production!
   labels:
     app: hello
-  name: the-map
+    org: acmeCorporation
+    variant: production
+  name: production-the-map
 ---
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    note: Hello, I am production!
   labels:
     app: hello
-  name: the-service
+    org: acmeCorporation
+    variant: production
+  name: production-the-service
 spec:
   ports:
   - port: 8666
@@ -22,25 +30,37 @@ spec:
   selector:
     app: hello
     deployment: hello
-  type: LoadBalancer
+    org: acmeCorporation
+    variant: production
+  type: clusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    note: Hello, I am production!
   labels:
     app: hello
-  name: the-deployment
+    org: acmeCorporation
+    variant: production
+  name: production-the-deployment
 spec:
-  replicas: 3
+  replicas: 10
   selector:
     matchLabels:
       app: hello
       deployment: hello
+      org: acmeCorporation
+      variant: production
   template:
     metadata:
+      annotations:
+        note: Hello, I am production!
       labels:
         app: hello
         deployment: hello
+        org: acmeCorporation
+        variant: production
     spec:
       containers:
       - command:
@@ -52,12 +72,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: altGreeting
-              name: the-map
+              name: production-the-map
         - name: ENABLE_RISKY
           valueFrom:
             configMapKeyRef:
               key: enableRisky
-              name: the-map
+              name: production-the-map
         image: monopole/hello:1
         name: the-container
         ports:
